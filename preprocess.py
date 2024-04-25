@@ -1,5 +1,5 @@
 '''
-This file preprocess the data 
+This file preprocess the images and masks
 Completed by Rucha Pendharkar on 4/24/24 
 
 '''
@@ -8,9 +8,8 @@ from PIL import Image
 import numpy as np
 from patchify import patchify 
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-
+import random 
 
 # Calculates the values for cropping the image
 def calculateCropSize(image, patchSize):
@@ -41,21 +40,19 @@ def normalizeImage(patchedImage):
     return scaled_patch
 
 # Preprocess Images and Masks  
-def processImages(imageType, imageExtension):
+def processImages(imageType, imageExtension, datasetFolder, datasetName):
 
-    #File paths 
-    datasetFolder = '/home/rucha/Segmentation-using-Deep-Networks'
-    datasetName = 'Semantic segmentation dataset'
 
     dataset = []
 
-    for tile in range(9):
+    for tile in range(1, 9):
         print(f"Processing Tile {tile}")
         for image_id in range(1,10):
             image_path = f'{datasetFolder}/{datasetName}/Tile {tile}/{imageType}/image_part_00{image_id}.{imageExtension}'
             testImage = cv2.imread(image_path)
             if testImage is not None:
-                testImage = cv2.cvtColor(testImage, cv2.COLOR_BGR2RGB)
+                if imageType == 'masks':
+                    testImage = cv2.cvtColor(testImage, cv2.COLOR_BGR2RGB)
                 sizeX, sizeY = calculateCropSize(testImage, 256)
                 image = Image.fromarray(testImage)
                 cropped_image = image.crop((0, 0, sizeX, sizeY))
@@ -69,46 +66,32 @@ def processImages(imageType, imageExtension):
     
     return dataset
 
-
 # main function
 def main():
+    
+    #File paths 
+    datasetFolder = '/Users/ruchinitsure/RuchaCV'
+    datasetName = 'Semantic segmentation dataset'
 
-    imageDataset = processImages('images', 'jpg')
-    maskDataset = processImages('masks', 'png')
-    print(imageDataset)
+    imageDataset = processImages('images', 'jpg', datasetFolder, datasetName)
+    maskDataset = processImages('masks', 'png', datasetFolder,datasetName )
 
     # Save pre processed images and masks
-    np.save('/home/rucha/Segmentation-using-Deep-Networks/image_dataset.npy', imageDataset)
-    np.save('/home/rucha/Segmentation-using-Deep-Networks/mask_dataset.npy', maskDataset)
+    #np.save('/home/rucha/CS5330/Final Project/image_dataset.npy', imageDataset)
+    #np.save('/home/rucha/CS5330/Final Project/mask_dataset.npy', maskDataset)
 
     print("Done!")
 
-    #Split the data into training and testing data
-    train_imgs, test_imgs, train_masks, test_masks = train_test_split(imageDataset, maskDataset, 
-                                                                  test_size = 0.2, 
-                                                                  shuffle = True, 
-                                                                  random_state = 3)
-    
-    print(len(train_imgs))
-    print(len(test_imgs))
-    print(len(train_masks))
-    print(len(test_masks))
-
-    plt.subplot(1, 2, 1)
-    plt.imshow(train_imgs[1])
-
-    plt.subplot(1, 2, 2)
-    plt.imshow(train_masks[1])
+    #Test plot
+    random_image_id = random.randint(0,len(maskDataset))
+    plt.figure(figsize=(14,8))
+    plt.subplot(121) 
+    plt.title("Image")
+    plt.imshow(imageDataset[random_image_id])
+    plt.subplot(122)
+    plt.title("Mask")
+    plt.imshow(maskDataset[random_image_id])
     plt.show()
-
-    #Save the data
-    print("...saving the data...")
-    np.save('/home/rucha/Segmentation-using-Deep-Networks.npy', train_imgs)
-    np.save('/home/rucha/Segmentation-using-Deep-Networks.npy', train_masks)
-    np.save('/home/rucha/Segmentation-using-Deep-Networks.npy', test_imgs)
-    np.save('/home/rucha/Segmentation-using-Deep-Networks.npy', test_masks)
-
-    print("Saved Testing and Training Data!")
 
 if __name__ == "__main__":
     main()
