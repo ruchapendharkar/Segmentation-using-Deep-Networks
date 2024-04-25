@@ -6,10 +6,7 @@ The goal of this project is to build and train a deep network capable of perform
 
 ## Link to Dataset - https://drive.google.com/drive/folders/1WUNccZJgfeS0Xh0FxQyOLFv5s54YzocM?usp=sharing
 
-## Link to Presentation Video - https://drive.google.com/file/d/1mqTZjQEWD5L9IizileoceknSWJHAQAoS/view?usp=sharing
-
 ## Link to Trained Models - https://drive.google.com/drive/folders/1VR021d0radMMGMiILTESiozlQY_2I_WI?usp=sharing
-
 
 ## Features
 - **preprocess.py**: For preprocessing images and masks in the dataset
