@@ -6,8 +6,6 @@ The goal of this project is to build and train a deep network capable of perform
 
 ## Link to Dataset - https://humansintheloop.org/resources/datasets/semantic-segmentation-dataset-2/
 
-## Link to Trained Models - https://drive.google.com/drive/folders/1VR021d0radMMGMiILTESiozlQY_2I_WI?usp=sharing
-
 ## Features
 - **preprocess.py**: For preprocessing images and masks in the dataset
 - **labels.py** : Processes labels and creates training and testing data
